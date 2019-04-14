@@ -22,13 +22,9 @@ The features are implemented using:
 - [x] The App icon and a simple launch screen were designed and added.
 
 
-## Video Walkthrough 
+## Guide 
 
-Here's a walkthrough of implemented user stories:
-
-<img src='' title='Video Walkthrough' width='' alt='Video Walkthrough' />
-
-GIF created with [Recordit](http://recordit.co/).
+Open the .xcodeproj using Xcode, and replace the 2 API URLs  in WaveViewController and 1 API URL in InitialViewController with the URL to your back-end. Edit the headers and json to match. The app is now ready to be installed on an iPhone!
 
 ## License
 
