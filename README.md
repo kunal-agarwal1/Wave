@@ -2,7 +2,7 @@
 
 **Wave** is a contact information exchange application for iOS.
 
-Submitted by: **Kunal Agarwal, Denmar Feliciano, Zachary Pinto, Sam**
+Submitted by: **Kunal Agarwal, Denmar Feliciano, Zachary Pinto, Sam Paul**
 
 Time spent: **25 - 30** hours spent in total
 
