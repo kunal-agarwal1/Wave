@@ -33,6 +33,8 @@ class AddContactViewController: UIViewController {
         addButton.backgroundColor = UIColor(white: 0, alpha: 0)
         addButton.layer.borderColor = UIColor.white.cgColor
         addButton.layer.borderWidth = 3
+        addButton.titleLabel?.text = "Add Contact"
+
         
         gradient.frame = view.bounds
         gradient.colors = [UIColor(red: 38.0/255.0, green: 1.0, blue: 229.0/255.0, alpha: 1.0).cgColor as CGColor,UIColor(red: 17.0/255.0, green: 149.0/255.0, blue: 1.0, alpha: 1.0).cgColor as CGColor]

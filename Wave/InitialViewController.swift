@@ -30,7 +30,7 @@ class InitialViewController: UIViewController {
         goButton.backgroundColor = UIColor(white: 0, alpha: 0)
         goButton.layer.borderColor = UIColor.white.cgColor
         goButton.layer.borderWidth = 3
-        
+        goButton.titleLabel?.text = "Login"
         
         gradient.frame = view.bounds
         gradient.colors = [UIColor(red: 38.0/255.0, green: 1.0, blue: 229.0/255.0, alpha: 1.0).cgColor as CGColor,UIColor(red: 17.0/255.0, green: 149.0/255.0, blue: 1.0, alpha: 1.0).cgColor as CGColor]
@@ -146,7 +146,7 @@ class InitialViewController: UIViewController {
         let jsonData = try? JSONSerialization.data(withJSONObject: data)
 
         //create the url with URL
-        let url = URL(string: "https://431bc5f8.ngrok.io/v1/createuser?json=")! //change the url
+        let url = URL(string: "https://97515a89.ngrok.io/v1/createuser?json=")! //change the url
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"

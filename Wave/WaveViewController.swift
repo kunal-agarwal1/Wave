@@ -19,6 +19,7 @@ class WaveViewController: UIViewController, CLLocationManagerDelegate {
     var motionManager = CMMotionManager()
     var data2 = [String:Any]()
     var finalcontact = [String: Any]()
+    var review = false
     
     @IBOutlet weak var logOutButton: UIButton!
     override func viewDidLoad() {
@@ -31,6 +32,8 @@ class WaveViewController: UIViewController, CLLocationManagerDelegate {
         logOutButton.backgroundColor = UIColor(white: 0, alpha: 0)
         logOutButton.layer.borderColor = UIColor.white.cgColor
         logOutButton.layer.borderWidth = 3
+        logOutButton.titleLabel?.text = "Logout"
+
         
         gradient.frame = view.bounds
         gradient.colors = [UIColor(red: 38.0/255.0, green: 1.0, blue: 229.0/255.0, alpha: 1.0).cgColor as CGColor,UIColor(red: 17.0/255.0, green: 149.0/255.0, blue: 1.0, alpha: 1.0).cgColor as CGColor]
@@ -48,19 +51,25 @@ class WaveViewController: UIViewController, CLLocationManagerDelegate {
     }
     
    override func viewDidAppear(_ animated: Bool) {
+    print("view did appear")
+    senseAcc()
+    }
+    
+    func senseAcc()
+    {
         motionManager.accelerometerUpdateInterval = 0.05
         var wave = 0
         var register = true
         var sign = true
         var ox = 0.0
-
+        
         motionManager.startAccelerometerUpdates(to: OperationQueue.current!) {(data1,error) in
             if let mydata = data1{
                 let x = mydata.acceleration.x
-                let y = mydata.acceleration.y
-                let z = mydata.acceleration.z
-
-             //   print("X VAL: \(x) Y VAL: \(y) Z VAL: \(z)")
+                _ = mydata.acceleration.y
+                _ = mydata.acceleration.z
+                
+                //  print("X VAL: \(x) Y VAL: \(y) Z VAL: \(z)")
                 if(register &&  ((ox - x) <= -1.8) || ((ox - x) >= 1.8))
                 {
                     wave = wave + 1;
@@ -79,23 +88,18 @@ class WaveViewController: UIViewController, CLLocationManagerDelegate {
                     self.motionManager.stopAccelerometerUpdates()
                     AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
                     
-     
-     if CLLocationManager.locationServicesEnabled() {
-        self.locationManager.delegate = self
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        print("about to request locatin")
-        self.locationManager.requestLocation()
-     }
                     
-
-                    
-
+                    if CLLocationManager.locationServicesEnabled() {
+                        self.locationManager.delegate = self
+                        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+                        print("about to request locatin")
+                        self.locationManager.requestLocation()
+                    }
                     /*let alertController = UIAlertController(title: "WAVES DONE", message:
-                        "", preferredStyle: .alert)
-                    alertController.addAction(UIAlertAction(title: "Ok", style: .default))
-                    
-                    self.present(alertController, animated: true, completion: nil)*/
-                    
+                     "", preferredStyle: .alert)
+                     alertController.addAction(UIAlertAction(title: "Ok", style: .default))
+                     
+                     self.present(alertController, animated: true, completion: nil)*/
                 }
                 if(sign && x < 0)
                 {
@@ -106,11 +110,9 @@ class WaveViewController: UIViewController, CLLocationManagerDelegate {
                     register = true
                 }
                 ox = x;
-
             }
         }
     }
-    
     
 
     
@@ -137,7 +139,7 @@ class WaveViewController: UIViewController, CLLocationManagerDelegate {
         let id = (save.integer(forKey: "user unique id"))
         print(id)
         
-        data = ["id": id, "lat":locValue.latitude,"long":locValue.longitude,"time" :dateStr] as! [String : Any]
+        data = ["id": id, "lat":locValue.latitude,"long":locValue.longitude,"time" :dateStr] 
         
         print(data)
         submitWave()
@@ -163,7 +165,7 @@ class WaveViewController: UIViewController, CLLocationManagerDelegate {
         let jsonData = try? JSONSerialization.data(withJSONObject: data)
         
         //create the url with URL
-        let url = URL(string: "https://431bc5f8.ngrok.io/v1/waveaction?json=")! //change the url
+        let url = URL(string: "https://97515a89.ngrok.io/v1/waveaction?json=")! //change the url
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -174,7 +176,7 @@ class WaveViewController: UIViewController, CLLocationManagerDelegate {
         
         
         
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             guard let data = data, error == nil else {
                 print(error?.localizedDescription ?? "No data")
                 return
@@ -187,12 +189,13 @@ class WaveViewController: UIViewController, CLLocationManagerDelegate {
                 self.getContact()
             }
         }
-        
+      //  self.senseAcc()
+
         task.resume()
         
     }
     
-    func getContact() {//todo
+    func getContact() {
         print("ENTER GET CONTACT")
 
         //declare parameter as a dictionary which contains string as key and value combination. considering inputs are valid
@@ -201,7 +204,7 @@ class WaveViewController: UIViewController, CLLocationManagerDelegate {
         let jsonData = try? JSONSerialization.data(withJSONObject: data2)
         
         //create the url with URL
-        let url = URL(string: "https://431bc5f8.ngrok.io/v1/getcontact?json=")! //change the url
+        let url = URL(string: "https://97515a89.ngrok.io/v1/getcontact?json=")! //change the url
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -210,7 +213,7 @@ class WaveViewController: UIViewController, CLLocationManagerDelegate {
         request.httpBody = jsonData
         
         print(data2)
-
+       
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
            
             guard let data = data, error == nil else {
@@ -224,16 +227,25 @@ class WaveViewController: UIViewController, CLLocationManagerDelegate {
               
                 if((responseJSON["firstname"] as! String) == "~There is no one around!")
                 {
-                    let alertController = UIAlertController(title: "Could not detect a waver nearby.", message:
-                        "Please try again later", preferredStyle: .alert)
-                    alertController.addAction(UIAlertAction(title: "Ok", style: .default))
-                    
+
                     let queue = DispatchQueue(label: "qq")
                     queue.async {
-                        self.viewDidAppear(false)
                     }
                     DispatchQueue.main.async {
+                        if(!self.review)
+                        {
+                            print("second call")
+                            self.review=true
+                            self.getContact()
+                        }
+                        else{
+                        let alertController = UIAlertController(title: "Could not detect a waver nearby.", message:
+                            "Please try again later", preferredStyle: .alert)
+                        alertController.addAction(UIAlertAction(title: "Ok", style: .default))
+                        print("its rewind time")
                         self.present(alertController, animated: true, completion: nil)
+                        self.senseAcc()
+                        }
                     }
                 }
                 else{
