@@ -165,7 +165,7 @@ class WaveViewController: UIViewController, CLLocationManagerDelegate {
         let jsonData = try? JSONSerialization.data(withJSONObject: data)
         
         //create the url with URL
-        let url = URL(string: "https://97515a89.ngrok.io/v1/waveaction?json=")! //change the url
+        let url = URL(string: "https://hackscwave.appspot.com/v1/waveaction?json=")! //change the url
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -179,6 +179,13 @@ class WaveViewController: UIViewController, CLLocationManagerDelegate {
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             guard let data = data, error == nil else {
                 print(error?.localizedDescription ?? "No data")
+                DispatchQueue.main.async {
+                    let alertController = UIAlertController(title: "Could connect to server.", message:
+                        "Please try again later", preferredStyle: .alert)
+                    alertController.addAction(UIAlertAction(title: "Ok", style: .default))
+                    self.present(alertController, animated: true, completion: nil)
+                    self.senseAcc()
+                }
                 return
             }
             let responseJSON = try? JSONSerialization.jsonObject(with: data, options: [])
@@ -204,7 +211,7 @@ class WaveViewController: UIViewController, CLLocationManagerDelegate {
         let jsonData = try? JSONSerialization.data(withJSONObject: data2)
         
         //create the url with URL
-        let url = URL(string: "https://97515a89.ngrok.io/v1/getcontact?json=")! //change the url
+        let url = URL(string: "https://hackscwave.appspot.com/v1/getcontact?json=")! //change the url
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -217,6 +224,13 @@ class WaveViewController: UIViewController, CLLocationManagerDelegate {
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
            
             guard let data = data, error == nil else {
+                DispatchQueue.main.async {
+                        let alertController = UIAlertController(title: "Could connect to server.", message:
+                            "Please try again later", preferredStyle: .alert)
+                        alertController.addAction(UIAlertAction(title: "Ok", style: .default))
+                        self.present(alertController, animated: true, completion: nil)
+                        self.senseAcc()
+                }
                 print(error?.localizedDescription ?? "No data")
                 return
             }
@@ -234,6 +248,7 @@ class WaveViewController: UIViewController, CLLocationManagerDelegate {
                     DispatchQueue.main.async {
                         if(!self.review)
                         {
+                            Thread.sleep(forTimeInterval: 5)
                             print("second call")
                             self.review=true
                             self.getContact()

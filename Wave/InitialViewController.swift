@@ -146,7 +146,7 @@ class InitialViewController: UIViewController {
         let jsonData = try? JSONSerialization.data(withJSONObject: data)
 
         //create the url with URL
-        let url = URL(string: "https://97515a89.ngrok.io/v1/createuser?json=")! //change the url
+        let url = URL(string: "https://hackscwave.appspot.com/v1/createuser?json=")! //change the url
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
